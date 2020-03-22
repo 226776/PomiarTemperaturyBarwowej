@@ -10,6 +10,7 @@ Na system pomiarowy składać się będą:
 ## Założenia konstrukcyjne:
 - modologia pomiaru: badanie składowych RGB i porównanie ich z charakterystyką ciała doskonale czarnego
 - dokładność +-500K
-- kalkulacja oraz prezentacja wyniku będzie realizowana przez skrypt/program na PC 
+- kalkulacja oraz prezentacja wyniku realizowana przez skrypt/program na PC 
 - realizacja układu akwizycji przy użyciu mikrokontrolera z wbudowanym modułem ADC
 - zasilanie układu awizycji danych: USB 5V
+
