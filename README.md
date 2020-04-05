@@ -14,3 +14,7 @@ Na system pomiarowy składać się będą:
 - realizacja układu akwizycji przy użyciu mikrokontrolera z wbudowanym modułem ADC
 - zasilanie układu awizycji danych: USB 5V
 
+## Schematic 
+- Status: w trakcie realizacji...
+- Środowisko: eagle
+
