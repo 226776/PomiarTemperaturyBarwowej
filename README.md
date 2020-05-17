@@ -19,7 +19,7 @@ Na system pomiarowy składać się będą:
 - Środowisko: eagle
 
 ## Podgląd
-![View1](Images/1 (1).jpg)
-![View1](Images/1 (2).jpg)
+![View1](Images/3.jpg)
+![View1](Images/4.jpg)
 
 
