@@ -53,7 +53,7 @@ SOFTWARE.
 #define ENABLE_OUTPUT() GPIO_ResetBits(nOE_PORT,nOE);
 #define DISABLE_OUTPUT() GPIO_SetBits(nOE_PORT,nOE);
 
-#define SystemCoreClock 8000000
+#define SystemCoreClock 8000000 /*HSI frequency*/
 
 /* Private variables */
 GPIO_InitTypeDef gpio;
@@ -106,6 +106,7 @@ int main(void)
 	period_meas = 0;
 	table_indx = 0;
 
+	/*SysTick configuration*/
 	if(SysTick_Config(SystemCoreClock / 1000)){
 		send_string("E");send_string("\n\r");
 		while(1);
@@ -154,7 +155,7 @@ int main(void)
 		table_indx++;
 		if(table_indx > 4){
 			DISABLE_OUTPUT();
-			// CALCULATE AVERAGE VALUES
+			/* CALCULATE AVERAGE VALUES */
 			RED_avr = (RED_values[0] + RED_values[1] + RED_values[2] + RED_values[3] + RED_values[4]) / 5;
 			BLUE_avr = (BLUE_values[0] + BLUE_values[1] + BLUE_values[2] + BLUE_values[3] + BLUE_values[4]) / 5;
 			GREEN_avr = (GREEN_values[0] + GREEN_values[1] + GREEN_values[2] + GREEN_values[3] + GREEN_values[4]) / 5;
@@ -176,12 +177,17 @@ int main(void)
 	}
 }
 
+/*
+ * Interrupt handler.
+ * Interrupt generated each rising edge at A4 pin.
+ * */
 void EXTI4_IRQHandler()
 {
+	/*First rising edge of the OUT signal*/
 	if(slope_count == 1){
 		TIM2 -> CNT = 0;
-		//ticks = 0;
 		slope_count = 2;
+	/*Second rising edge of the OUT signal - period measurement*/
 	}else if (slope_count == 2){
 		period_meas = (TIM2 -> CNT);
 		slope_count = 1;
@@ -192,6 +198,9 @@ void EXTI4_IRQHandler()
 	EXTI_ClearITPendingBit(EXTI_Line4);
 }
 
+/*
+ * SYSTICK used by delay_ms(uint32_t) function.
+ * */
 void SysTick_Handler()
 {
     ticks++;
@@ -233,13 +242,13 @@ void GPIO_init(){
     gpio.GPIO_Mode = GPIO_Mode_IN_FLOATING;
     GPIO_Init(GPIOA, &gpio);
 
-    /* OUT pin TCS3200D */
+    /* OUT pin TCS3200D - interrupt generated at this pin */
     GPIO_StructInit(&gpio);
     gpio.GPIO_Pin = GPIO_Pin_4;
     gpio.GPIO_Mode = GPIO_Mode_IPD;
     GPIO_Init(GPIOA, &gpio);
 
-    /* nOE pin TCS3200D */
+    /* nOE pin TCS3200D - not used. Can be connected to LED pin of TCS3200D module. */
     GPIO_StructInit(&gpio);
     gpio.GPIO_Pin = GPIO_Pin_5;
     gpio.GPIO_Mode = GPIO_Mode_Out_PP;
@@ -272,6 +281,9 @@ void GPIO_init(){
 
 }
 
+/*
+ * UART2 initialization
+ * */
 void UART_init(){
 	USART_StructInit(&uart);
 	uart.USART_BaudRate = 9600;
@@ -280,8 +292,11 @@ void UART_init(){
 	USART_Cmd(USART2, ENABLE);
 }
 
+/*
+ * Clock configuration for all peripherals
+ * */
 void RCC_init(){
-	RCC_SYSCLKConfig(RCC_SYSCLKSource_HSI);
+	RCC_SYSCLKConfig(RCC_SYSCLKSource_HSI); /* HSI 8MHz is a system clock*/
 
 	RCC -> CFGR &= ~RCC_CFGR_PPRE1; /* APB1 prescaler = 1 */
 	RCC -> CFGR &= ~RCC_CFGR_HPRE;  /* AHB prescaler = 1 */
@@ -292,6 +307,10 @@ void RCC_init(){
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
 }
 
+/*
+ * Interrupt from TCS3200D OUT pin.
+ * Interrupt is generated at each rising edge at OUT pin (A4 pin of the MCU).
+ * */
 void NVIC_EXTI_init(void){
 	EXTI_StructInit(&exti);
 	exti.EXTI_Line = EXTI_Line4;
@@ -307,6 +326,10 @@ void NVIC_EXTI_init(void){
 	NVIC_Init(&nvic);
 }
 
+/*
+ * Timer used to measure signal's period at OUT output of TCS3200D sensor.
+ * TIM2 is clocked with 1MHz frequency (1us period).
+ * */
 void TIM_init(void){
 	TIM_TimeBaseStructInit(&tim);
 	tim.TIM_CounterMode = TIM_CounterMode_Up;
