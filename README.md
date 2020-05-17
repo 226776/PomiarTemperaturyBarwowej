@@ -15,7 +15,7 @@ Na system pomiarowy składać się będą:
 - zasilanie układu awizycji danych: USB 5V
 
 ## Schematic 
-- Status: oczekiwanie na weryfikację
+- Status: zweryfikowany - płytka wytrawiona
 - Środowisko: eagle
 
 
