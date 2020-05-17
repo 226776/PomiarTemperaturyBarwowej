@@ -18,4 +18,7 @@ Na system pomiarowy składać się będą:
 - Status: zweryfikowany - płytka wytrawiona
 - Środowisko: eagle
 
+## Podgląd
+![](Images\1 (1))
+
 
