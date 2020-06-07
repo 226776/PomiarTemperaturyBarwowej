@@ -1,6 +1,4 @@
 # Pomiar Temperatury Barwowej
-
-## Opis:
 Repozytorium zawiera wszystkie niezbędne elementy projektu, najważniejsze z nich wymieniono poniżej:
 - Katalog Hardware:
 	- projekt płytki wykonany w środowisku eagle 
